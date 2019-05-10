@@ -12,6 +12,8 @@ import scipy
 import scipy.signal as sig
 import scipy.io
 
+from collections import defaultdict
+
 import pdb
 import matplotlib.pyplot as plt
 
@@ -20,18 +22,23 @@ from scipy import interpolate
 from scipy.interpolate import interp1d
 
 import mayavi.mlab
-from mayavi.mlab import quiver3d
+from mayavi.mlab import quiver3d, plot3d
 
 import numpy as np
 from mayavi import mlab
 
+from sklearn.decomposition import PCA
 
 class ecg_tensor:
     def __init__(self,ch=9):
-        self.ecg = wfdb.rdrecord('007c')
+        #No previous MI
+        self.ecg = wfdb.rdrecord('focus_data/007c')
+        #Previous MI:
+        #self.ecg = wfdb.rdrecord('focus_data/013c')
         self.ch=ch
         
         #self.detrend_ecg()
+        self.vect_estimate = defaultdict()
         
     def plot_raw(self,filtered=False):
         
@@ -98,7 +105,9 @@ class ecg_tensor:
         x,xi,y,yi,_,_ = self.interpolated_states(c1=c1,c2=c2,c3=c3)
         
         tstart = 0
-        tend=200
+        tend=400
+        
+        #Maybe add a peak-threshold finder and label all the q waves?
         
         plt.figure()
         plt.subplot(211)
@@ -112,10 +121,26 @@ class ecg_tensor:
         plt.plot(y[tstart:tend])
         plt.xlim(0,500)
     
+    def plot_3d_phase(self):
+        x,xi,y,yi,z,zi = self.interpolated_states(c1=0,c2=1,c3=2)
+        
+        tstart = 0
+        tend=200
+        
+        plot3d(xi[0:1000],yi[0:1000],zi[0:1000],line_width=0.1)
+        quiver3d(1,0,0)
+        quiver3d(0,1,0)
+        quiver3d(0,0,1)
+        
     def animate_signals(self):
         #vec = self.filt_sig.T
-        _,x,_,y,_,z = self.interpolated_states()
+        #if you want to do the raw data with interpolations
+        #_,x,_,y,_,z = self.interpolated_states()
         
+        #if you want the PCAd version
+        x = self.vect_estimate['PCA'][:,0]
+        y = self.vect_estimate['PCA'][:,1]
+        z = self.vect_estimate['PCA'][:,2]
         
         s = quiver3d(x[0],y[0],z[0],line_width=10)
         
@@ -129,10 +154,25 @@ class ecg_tensor:
                 yield
         anim()
         mlab.show()
+    
+    def vect_find(self):
+        pca = PCA(n_components=3)
+        #_,x,_,y,_,z = self.interpolated_states()
+        
+        #data = np.vstack((x,y,z))
+        
+        data = self.filt_sig.T
+        self.pca_data = data
+        self.vect_estimate['PCA'] = pca.fit_transform(data)
 
 ecg_data = ecg_tensor()
 ecg_data.detrend_ecg()
 ecg_data.resample()
+ecg_data.vect_find()
+
+#%%
+ecg_data.plot_3d_phase()
+#%%
 ecg_data.plot_cycle()
 ecg_data.plot_phase(c1=1,c2=-2,c3=-3)
 #%%
