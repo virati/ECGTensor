@@ -13,4 +13,4 @@ With a very simple reframing of the data, we can see patterns emerge much more o
 
 An example of the phase space between channel V1 and V2 is displayed below
 
-![Example phase portrait](imgs/ECG_phase.png)
+![Example phase portrait](imgs/ECG_Phase.png)
