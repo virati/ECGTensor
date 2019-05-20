@@ -14,9 +14,10 @@ ecg_data.resample()
 ecg_data.vect_find()
 
 #%%
-ecg_data.plot_3d_phase()
+
 #%%
 ecg_data.plot_cycle()
-ecg_data.plot_phase(c1=1,c2=-2,c3=-3)
+ecg_data.plot_phase(c1=0,c2=1,c3=2)
 #%%
-ecg_data.animate_signals()
+ecg_data.plot_3d_phase()
+ecg_data.animate_signals(reduced=False)

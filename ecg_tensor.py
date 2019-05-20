@@ -143,7 +143,7 @@ class ecg_tensor:
             y = self.vect_estimate['PCA'][:,1]
             z = self.vect_estimate['PCA'][:,2]
             
-        s = quiver3d(x[0],y[0],z[0],line_width=10)
+        s = quiver3d(0,0,0,x[0],y[0],z[0],line_width=10,color=(0.0,0.0,1.0))
         
         
         @mlab.animate(delay=10)
