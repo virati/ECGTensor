@@ -11,6 +11,7 @@ import numpy as np
 from mayavi.mlab import *
 from scipy.ndimage.filters import gaussian_filter#, quiver3d
 from mayavi import mlab
+import time
 
 
 # Create data with x and y random in the [-2, 2] segment, and z a
@@ -43,26 +44,31 @@ class heart_surf:
         mlab.figure(1, fgcolor=(0, 0, 0), bgcolor=(1, 1, 1))
         
         # Visualize the points
-        pts = mlab.points3d(self.x, self.y, self.z, self.z, scale_mode='none', scale_factor=0.1,opacity=0.7,color=(1.0,0.0,0.0))
+        self.pts = mlab.points3d(self.x, self.y, self.z, self.z, scale_mode='none', scale_factor=0.1,opacity=0.7,color=(1.0,0.0,0.0))
         
         # Create and visualize the mesh
-        #self.mesh = mlab.pipeline.delaunay2d(pts)
-        #self.interp_surf = mlab.pipeline.surface(self.mesh,opacity=0.4)
+        self.mesh = mlab.pipeline.delaunay2d(self.pts)
+        self.interp_surf = mlab.pipeline.surface(parent=self.mesh,opacity=0.4)
     
-        @mlab.animate(delay=100)
+        
+        #self.interp_surf = mlab.surf(self.mesh)
+
+        @mlab.animate(delay=10)
         def anim():
+            mplt = self.pts.mlab_source
             for ii in np.arange(10000):
-                pass
-                self.x += 0.05+np.random.normal(0.0,0.01,size=self.x.shape)
-                self.y += np.random.normal(0.0,0.01,size=self.x.shape)
-                self.z += np.random.normal(0.0,0.01,size=self.x.shape)
                 
-                pts.mlab_source.x = self.x
-                pts.mlab_source.y = self.y
-                pts.mlab_source.z = self.z
+                new_x = (1+ii/1000)*self.x#*np.random.normal(0.0,0.01,size=self.x.shape)
+                new_y = (1+ii/1000) * self.y#*np.random.normal(0.0,0.01,size=self.x.shape)
+                new_z = (1+ii/1000) * self.z #np.random.normal(0.0,0.01,size=self.x.shape)
                 
-                self.mesh = mlab.pipeline.delaunay2d(pts)
-                self.interp_surf.mlab_source.parent = mesh
+                #self.pts.mlab_source.x = new_x
+                #self.pts.mlab_source.y = new_y
+                #self.pts.mlab_source.z = new_z
+                mplt.set(x=new_x,y=new_y,z=new_z)
+                
+                self.mesh = mlab.pipeline.delaunay2d(self.pts)
+                self.interp_surf.mlab_source.parent = self.mesh
                 
                 yield
         anim()
