@@ -30,8 +30,6 @@ def h(x,y,beta=0.5):
 
     return beta*np.sin((base_w[0]+swig)*x) + (1-beta)*np.sin((base_w[-1]+swig)*y)
 
-
-
 class heart_surf:
     def __init__(self,samples=100):
         np.random.seed(12345)
@@ -41,6 +39,15 @@ class heart_surf:
 
         self.z = h(self.x, self.y)
 
+    def update_points(self,frame):
+        self.x += np.random.normal(0.0,0.01,size=self.x.shape)
+        self.y += np.random.normal(0.0,0.01,size=self.x.shape)#+np.sinc(frame-200)
+        self.z = h(self.x,self.y) #np.random.normal(0.0,0.01,size=self.x.shape)
+        
+        if frame > 200:
+            self.x += 0.1*np.sinc(2*np.pi*(frame-200)/10*self.x)
+            self.y += 0.1*np.sinc(2*np.pi*(frame-200)/10*self.y)
+        
     def plot_surf(self):
         mlab.figure(1, fgcolor=(0, 0, 0), bgcolor=(1, 1, 1))
         p2d = np.vstack([self.x,self.y]).T
@@ -49,34 +56,20 @@ class heart_surf:
         # Visualize the points
         #self.pts = mlab.points3d(self.x, self.y, self.z, self.z, scale_mode='none', scale_factor=0.1,opacity=0.7,color=(1.0,0.0,0.0))
         self.tmesh = mlab.triangular_mesh(self.x, self.y, self.z, d2d.vertices,
-                             scalars=self.y, colormap='jet')
+                             scalars=self.z, colormap='jet')
         
-        # Create and visualize the mesh
-        #self.mesh = mlab.pipeline.delaunay2d(self.pts)
-        #self.interp_surf = mlab.pipeline.surface(parent=self.mesh,opacity=0.4)
-    
-        
-        #self.interp_surf = mlab.surf(self.mesh)
 
         @mlab.animate(delay=10)
         def anim():
             mplt = self.tmesh.mlab_source
-            for ii in np.arange(10000):
+            for ii in np.arange(1000):
+                self.update_points(frame=ii)
                 
-                self.x *= 1.001#*self.x#*np.random.normal(0.0,0.01,size=self.x.shape)
-                self.y *= 1.001#*self.y#*np.random.normal(0.0,0.01,size=self.x.shape)
-                self.z = h(self.x,self.y) #np.random.normal(0.0,0.01,size=self.x.shape)
-                
-                #self.pts.mlab_source.x = new_x
-                #self.pts.mlab_source.y = new_y
-                #self.pts.mlab_source.z = new_z
                 p2d = np.vstack([self.x,self.y]).T
                 d2d = Delaunay(p2d)
                 
                 mplt.set(x=self.x,y=self.y,z=self.z,triangles=d2d.vertices)
-                
-                #self.mesh = mlab.pipeline.delaunay2d(self.pts)
-                #self.interp_surf.mlab_source.parent = self.mesh
+                #self.pts.mlab_source.set(x=self.x,y=self.y,z=self.z)
                 
                 yield
         anim()
@@ -84,3 +77,4 @@ class heart_surf:
 
 heart = heart_surf()
 heart.plot_surf()
+
