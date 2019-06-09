@@ -27,3 +27,8 @@ An example of the phase space between channel V1 and V2 is displayed below
 Why not plot it in 3d? That's much cooler
 
 ![Example 3d portrait](imgs/three_d_phase.png)
+
+## Mechanical-Electrical (from scratch)
+The next step is to build up a cardiomyocyte syncitium from scratch and try to get it to generate electrical signals in a forward model
+
+![Example heart surface](imgs/c_syncytium.png)
