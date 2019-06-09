@@ -20,4 +20,4 @@ ecg_data.plot_cycle()
 ecg_data.plot_phase(c1=0,c2=1,c3=2)
 #%%
 ecg_data.plot_3d_phase()
-ecg_data.animate_signals(reduced=False)
+ecg_data.animate_signals(reduced=True)

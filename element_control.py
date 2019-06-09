@@ -9,11 +9,12 @@ Per-element topology
 
 import numpy as np
 from mayavi.mlab import *
-from scipy.ndimage.filters import gaussian_filter#, quiver3d
 from mayavi import mlab
-import time
+
+from scipy.ndimage.filters import gaussian_filter#, quiver3d
 from scipy.spatial import Delaunay
 
+import time
 
 # Create data with x and y random in the [-2, 2] segment, and z a
 # Gaussian function of x and y.
@@ -31,7 +32,7 @@ def h(x,y,beta=0.5):
     return beta*np.sin((base_w[0]+swig)*x) + (1-beta)*np.sin((base_w[-1]+swig)*y)
 
 class heart_surf:
-    def __init__(self,samples=100):
+    def __init__(self,samples=1000):
         np.random.seed(12345)
         self.n = samples
         self.x = 7 * (np.random.random(samples) - 0.5)
@@ -44,9 +45,9 @@ class heart_surf:
         self.y += np.random.normal(0.0,0.01,size=self.x.shape)#+np.sinc(frame-200)
         self.z = h(self.x,self.y) #np.random.normal(0.0,0.01,size=self.x.shape)
         
-        if frame > 200:
-            self.x += 0.1*np.sinc(2*np.pi*(frame-200)/10*self.x)
-            self.y += 0.1*np.sinc(2*np.pi*(frame-200)/10*self.y)
+        if frame > 100:
+            self.x += 0.5*np.sinc(2*np.pi*(frame-200)/2*self.x)
+            self.y += 0.5*np.sinc(2*np.pi*(frame-200)/2*self.y)
         
     def plot_surf(self):
         mlab.figure(1, fgcolor=(0, 0, 0), bgcolor=(1, 1, 1))
@@ -58,13 +59,12 @@ class heart_surf:
         self.tmesh = mlab.triangular_mesh(self.x, self.y, self.z, d2d.vertices,
                              scalars=self.z, colormap='jet')
         
-
         @mlab.animate(delay=10)
         def anim():
             mplt = self.tmesh.mlab_source
             for ii in np.arange(1000):
                 self.update_points(frame=ii)
-                
+                print(ii)
                 p2d = np.vstack([self.x,self.y]).T
                 d2d = Delaunay(p2d)
                 
@@ -72,8 +72,9 @@ class heart_surf:
                 #self.pts.mlab_source.set(x=self.x,y=self.y,z=self.z)
                 
                 yield
+                
         anim()
-        mlab.show()
+        #mlab.show()
 
 heart = heart_surf()
 heart.plot_surf()
