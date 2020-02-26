@@ -126,6 +126,7 @@ class ecg_tensor:
         
         tstart = 0
         tend=200
+        #vec_mag = np.linalg.norm([xi,yi,zi],axis=0)
         
         plot3d(xi[0:1000],yi[0:1000],zi[0:1000],line_width=0.1)
         quiver3d(1,0,0)
@@ -154,7 +155,7 @@ class ecg_tensor:
                 s.mlab_source.w = z[ii]
                 yield
         anim()
-        mlab.show()
+        #mlab.show()
     
     def vect_find(self):
         pca = PCA(n_components=3)
