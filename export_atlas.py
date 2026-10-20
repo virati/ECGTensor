@@ -81,6 +81,6 @@ recon = dict(mrl=rz.tolist(), mrl_slog=rzl.tolist(),
              pca=pca_resid(x), pca_slog=pca_resid(xl))
 
 json.dump(dict(fs=fs, rr=rr, t0=T0, record='STAFF-III 007c', methods=methods, recon=recon),
-          open(sys.argv[1] if len(sys.argv) > 1 else 'atlas/ecg_data.json', 'w'), separators=(',', ':'))
+          open(sys.argv[1] if len(sys.argv) > 1 else 'web/public/ecg_data.json', 'w'), separators=(',', ':'))
 print('beats', [len(m['beats']) for m in methods])
 print({k: np.round(v[:4], 3).tolist() for k, v in recon.items()})

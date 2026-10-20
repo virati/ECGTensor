@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- Same base styles the Claude artifact host injects, so layout matches the artifact exactly -->
+<style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style>
+<title>ECG Phase Atlas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>ECG Phase <span>Atlas</span></h1>
+      <p class="sub" id="sub"></p>
+    </div>
+    <div class="keys"><kbd>1</kbd>–<kbd>6</kbd> method · <kbd>space</kbd> play · <kbd>F</kbd> face-on · drag to orbit</div>
+  </header>
+
+  <section class="main">
+    <div class="stage" id="stage">
+      <div class="labels" id="labels"></div>
+      <div class="hud">
+        <div class="eyebrow" id="hud-eyebrow">Method 1 of 6</div>
+        <h2 id="hud-name">Raw</h2>
+        <p id="hud-blurb"></p>
+      </div>
+      <canvas class="clock" id="clock" width="240" height="240" aria-label="Cardiac phase clock"></canvas>
+      <div class="readout" id="readout"></div>
+      <div class="controls">
+        <button id="play" aria-pressed="true">Pause</button>
+        <label for="speed">Speed <input id="speed" type="range" min="0.1" max="2" step="0.05" value="0.5"><output id="speed-o">0.50×</output></label>
+        <label for="trail">Trail <input id="trail" type="range" min="0.1" max="0.8" step="0.02" value="0.4"><output id="trail-o">400 ms</output></label>
+        <label for="glow">Glow <input id="glow" type="range" min="0" max="2" step="0.05" value="0.9"><output id="glow-o">0.90</output></label>
+        <button id="allbeats" aria-pressed="false">All beats bright</button>
+        <button id="rotate" aria-pressed="false">Auto-rotate</button>
+        <button id="face">Face-on (x–y)</button>
+      </div>
+    </div>
+
+    <aside class="side">
+      <h3>Pre-mappings · x–y projection</h3>
+      <div class="grid6" id="cards"></div>
+      <p class="note">Each panel shows the first two coordinates, the same plane as the original V1/V2 portrait. Colour is cardiac phase, the fraction of the R–R interval, so the QRS, T and P segments match across panels. The dots move together at the same instant.</p>
+    </aside>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h3 id="trace-title">Coordinates over time</h3>
+      <div class="legend" id="trace-legend"></div>
+    </div>
+    <div class="chart" id="trace"></div>
+    <p class="note">Drawn on ECG paper: small boxes are 40 ms, large boxes 200 ms. Click or drag to scrub. Each method is scaled to fit ±1 for comparison.</p>
+  </section>
+
+  <section class="bottom">
+    <div class="panel">
+      <div class="panel-head">
+        <h3>How many dimensions does a heartbeat need?</h3>
+        <div class="legend">
+          <span><i class="sw" style="border-color:var(--s-x)"></i>Matryoshka</span>
+          <span><i class="sw" style="border-color:var(--s-y)"></i>PCA</span>
+          <span><i class="sw" style="border-color:var(--ink-2)"></i>signed-log input</span>
+          <span><i class="sw dash" style="border-color:var(--ink-2)"></i>raw input</span>
+        </div>
+      </div>
+      <div class="chart" id="recon"></div>
+      <p class="callout" id="recon-callout"></p>
+    </div>
+    <div class="panel">
+      <h3>The six mappings</h3>
+      <ul class="methods" id="methods"></ul>
+    </div>
+  </section>
+</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
