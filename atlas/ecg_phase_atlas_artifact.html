@@ -275,7 +275,7 @@ trailGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(TMAX *
 trailGeo.setAttribute('aSize', new THREE.BufferAttribute(new Float32Array(TMAX), 1));
 const trailMat = new THREE.ShaderMaterial({
   uniforms: { uPR: { value: renderer.getPixelRatio() } },
-  vertexShader: `attribute float aSize; attribute vec3 color; varying vec3 vC; varying float vA;
+  vertexShader: `attribute float aSize; varying vec3 vC; varying float vA;
     uniform float uPR;
     void main(){ vC = color; vA = aSize; vec4 mv = modelViewMatrix * vec4(position,1.0);
       gl_PointSize = (2.0 + 16.0*aSize) * uPR * (2.6 / -mv.z); gl_Position = projectionMatrix * mv; }`,
