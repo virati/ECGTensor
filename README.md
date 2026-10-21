@@ -3,7 +3,7 @@ Author: Vineet Tiruvadi 2019
 
 A fun library I made during my IM rotation at Grady/Emory. It's meant to help visualize the learning process with ECGs, particularly with an emphasis on seeing the traditional ECG timetraces in a more modern, dynamical systems perspective. Maybe this will rely on other control theory-related repos I've got setup...
 
-![ECG Phase Atlas](imgs/atlas_hero.png)
+![ECG Phase Atlas: comet trail through the beats](imgs/atlas_trail.gif)
 
 ## Contents
 - [Dataset](#dataset)
@@ -64,6 +64,8 @@ Also in the module: `load_ecg` (band-pass + decimate), `find_r_peaks` (multi-lea
 An interactive page that puts all six mappings in one place
 ([`atlas/ecg_phase_atlas_artifact.html`](atlas/ecg_phase_atlas_artifact.html), self-contained, opens in a browser;
 also published as a private Claude artifact).
+
+![Atlas: morphing through all six mappings](imgs/atlas_morph.gif)
 
 ![Atlas: log + Matryoshka](imgs/atlas_matryoshka.png)
 
